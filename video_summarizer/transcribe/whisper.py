@@ -2,6 +2,7 @@ from pathlib import Path
 import platform
 
 import whisper
+from video_summarizer.logger import logger
 
 
 def _is_apple_silicon() -> bool:
@@ -21,7 +22,7 @@ def _transcribe_with_mlx(
     try:
         import mlx_whisper
 
-        print("Using MLX-Whisper for transcription...")
+        logger.info("Using MLX-Whisper for transcription...")
 
         result = mlx_whisper.transcribe(
             str(audio_path),
@@ -83,16 +84,16 @@ def transcribe(
 
     If language is None (default), the language will be auto-detected.
     """
-    if _is_apple_silicon():
+    if platform.system() == "Darwin":
         try:
             return _transcribe_with_mlx(audio_path, output_dir, language)
         except (ImportError, RuntimeError) as e:
-            print(f"MLX-Whisper not available: {e}")
-            print("Falling back to OpenAI Whisper...")
+            logger.warning(f"MLX-Whisper not available: {e}")
+            logger.info("Falling back to OpenAI Whisper...")
             return _transcribe_with_whisper(
                 audio_path, output_dir, language, model_name
             )
     else:
-        print("Using OpenAI Whisper...")
+        logger.info("Using OpenAI Whisper...")
 
     return _transcribe_with_whisper(audio_path, output_dir, language, model_name)

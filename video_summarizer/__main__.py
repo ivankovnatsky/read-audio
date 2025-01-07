@@ -12,6 +12,7 @@ from video_summarizer.config import (
     DEFAULT_LLAMA_MODEL,
     DEFAULT_LANGUAGE,
 )
+from video_summarizer.logger import logger
 
 
 def parse_args() -> argparse.Namespace:
@@ -72,15 +73,15 @@ def main() -> int:
             
             # Handle input source
             if args.url:
-                print("Downloading audio...")
+                logger.info("Downloading audio...")
                 audio_path = youtube.download_audio(args.url, temp_path)
             else:
-                print("Processing local video...")
+                logger.info("Processing local video...")
                 # Copy to temp dir to ensure consistent naming
                 audio_path = temp_path / args.file.name
                 shutil.copy2(args.file, audio_path)
             
-            print("Transcribing audio...")
+            logger.info("Transcribing audio...")
             transcript_path = whisper.transcribe(
                 audio_path,
                 temp_path,
@@ -88,7 +89,7 @@ def main() -> int:
                 model_name=args.whisper_model,
             )
             
-            print("Generating summary...")
+            logger.info("Generating summary...")
             summary = llama.summarize(
                 transcript_path,
                 model_name=args.llama_model,
@@ -99,12 +100,12 @@ def main() -> int:
             with open(output_path, "w", encoding="utf-8") as f:
                 f.write(summary)
                 
-            print(f"\nSummary saved to: {output_path}")
+            logger.info(f"\nSummary saved to: {output_path}")
             
         return 0
 
     except Exception as e:
-        print(f"Error: {str(e)}", file=sys.stderr)
+        logger.error(f"Error: {str(e)}")
         return 1
 
 

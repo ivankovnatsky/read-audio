@@ -4,6 +4,7 @@ import requests
 from typing import Optional
 
 from video_summarizer.config import DEFAULT_LLAMA_MODEL
+from video_summarizer.logger import logger
 
 
 class OllamaError(Exception):
@@ -58,7 +59,7 @@ def summarize(
         request_body["options"] = {"num_predict": max_tokens}
 
     try:
-        print(f"Making Ollama API request to {ollama_host}")
+        logger.info(f"Making Ollama API request to {ollama_host}")
         
         # Make the API request to Ollama
         response = requests.post(
