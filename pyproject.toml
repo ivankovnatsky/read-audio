@@ -2,7 +2,7 @@
 name = "video-summarizer"
 version = "0.1.0"
 description = "Video summarization using local ML models"
-authors = ["75213+ivankovnatsky@users.noreply.github.com"]
+authors = ["Ivan Kovnatsky 75213+ivankovnatsky@users.noreply.github.com"]
 readme = "README.md"
 packages = [{include = "video_summarizer"}]
 
@@ -12,6 +12,7 @@ yt-dlp = "^2024.1.1"
 openai-whisper = "20240930"
 requests = "^2.31.0"
 mlx-whisper = {version = "^0.4.1", platform = "darwin", optional = true}
+click = "^8.1.7"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.9"

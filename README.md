@@ -104,6 +104,4 @@ direnv allow
 
 ## TODO
 
-- [ ] Replace all multiline strings with newline chars \n, variables with appropriate multiline definitions
 - [ ] Research if we can use Cloud models for faster summarization
-- [ ] Replace argparse with click

@@ -65,6 +65,11 @@ run-url:
 	$(POETRY) run $(BINARY_NAME) \
 		--url $(url)
 
+run-url-language:
+	$(POETRY) run $(BINARY_NAME) \
+		--url $(url) \
+		--language $(language) \
+
 run-file:
 	$(POETRY) run $(BINARY_NAME) \
 		--file $(file)

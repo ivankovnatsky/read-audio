@@ -113,6 +113,20 @@ files = [
 ]
 
 [[package]]
+name = "click"
+version = "8.1.8"
+description = "Composable command line interface toolkit"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "click-8.1.8-py3-none-any.whl", hash = "sha256:63c132bbbed01578a06712a2d1f497bb62d9c1c0d329b7903a866228027263b2"},
+    {file = "click-8.1.8.tar.gz", hash = "sha256:ed53c9d8990d83c2a27deae68e4ee337473f6330c040a31d4225c9574d16096a"},
+]
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -1209,4 +1223,4 @@ macos = ["mlx-whisper"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "df80560ea6000b80632b4c9e25b3d38b45ac7802ada3dcf761d78db06ce625e8"
+content-hash = "ed3ba75175e6562585b52121e9b76faa49d26dc01d2e7345c739ab40fcda7afd"
