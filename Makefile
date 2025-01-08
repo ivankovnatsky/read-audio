@@ -74,5 +74,18 @@ run-file:
 	$(POETRY) run $(BINARY_NAME) \
 		--file $(file)
 
+run-url-with-transcript:
+	$(POETRY) run $(BINARY_NAME) \
+		--url $(url) \
+		--show-transcript
+
+run-example-with-transcript:
+	$(POETRY) run $(BINARY_NAME) \
+		--whisper-model large \
+		--llama-model $(DEFAULT_LLAMA_MODEL) \
+		--language uk \
+		--show-transcript \
+		--url "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+
 # Check all (format, lint)
 check: fmt-check lint

@@ -46,7 +46,12 @@ from video_summarizer.logger import logger
     default=DEFAULT_LANGUAGE,
     help=f"Video language (default: {DEFAULT_LANGUAGE})",
 )
-def main(url: str | None, file: Path | None, output: Path, whisper_model: str, llama_model: str, language: str) -> int:
+@click.option(
+    "--show-transcript",
+    is_flag=True,
+    help="Display the transcript before summarization",
+)
+def main(url: str | None, file: Path | None, output: Path, whisper_model: str, llama_model: str, language: str, show_transcript: bool) -> int:
     """Generate video summaries using Whisper and LLaMA."""
     if not url and not file:
         raise click.UsageError("Either --url or --file must be provided")
@@ -76,7 +81,16 @@ def main(url: str | None, file: Path | None, output: Path, whisper_model: str, l
                 model_name=whisper_model,
             )
             
-            logger.info("Generating summary...")
+            # Only show transcript if flag is enabled
+            if show_transcript:
+                with open(transcript_path, "r", encoding="utf-8") as f:
+                    transcript = f.read()
+                logger.info("\nTranscript:")
+                logger.info("-" * 80)
+                logger.info(transcript)
+                logger.info("-" * 80)
+            
+            logger.info("\nGenerating summary...")
             summary = llama.summarize(
                 transcript_path,
                 model_name=llama_model,
