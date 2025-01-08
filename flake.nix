@@ -16,7 +16,7 @@
       in
       {
         packages = {
-          youtube-summarizer = mkPoetryApplication {
+          video-summarizer = mkPoetryApplication {
             projectDir = ./.;
             preferWheels = true;
 
@@ -26,7 +26,7 @@
               ollama
             ];
           };
-          default = self.packages.${system}.youtube-summarizer;
+          default = self.packages.${system}.video-summarizer;
         };
 
         devShells.default = pkgs.mkShell {
