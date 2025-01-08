@@ -2,7 +2,7 @@
 name = "video-summarizer"
 version = "0.1.0"
 description = "Video summarization using local ML models"
-authors = ["Ivan Kovnatsky 75213+ivankovnatsky@users.noreply.github.com"]
+authors = ["Ivan Kovnatsky <75213+ivankovnatsky@users.noreply.github.com>"]
 readme = "README.md"
 packages = [{include = "video_summarizer"}]
 
