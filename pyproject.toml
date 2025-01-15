@@ -4,11 +4,11 @@ version = "0.1.0"
 description = "Video summarization using local ML models"
 authors = ["Ivan Kovnatsky <75213+ivankovnatsky@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "video_summarizer"}]
+packages = [{include = "video_summarizer", format = "sdist"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
-yt-dlp = "^2024.1.1"
+yt-dlp = "^2025.1.12"
 openai-whisper = "20240930"
 requests = "^2.31.0"
 mlx-whisper = {version = "^0.4.1", platform = "darwin", optional = true}

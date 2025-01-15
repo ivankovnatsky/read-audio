@@ -18,6 +18,9 @@ install:
 install-macos:
 	$(POETRY) install -E macos
 
+regenerate-lock:
+	$(POETRY) lock --no-update
+
 # Clean build files
 clean:
 	rm -rf dist/
@@ -68,7 +71,7 @@ run-url:
 run-url-language:
 	$(POETRY) run $(BINARY_NAME) \
 		--url $(url) \
-		--language $(language) \
+		--language $(language)
 
 run-file:
 	$(POETRY) run $(BINARY_NAME) \
