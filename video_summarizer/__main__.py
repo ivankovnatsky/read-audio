@@ -67,7 +67,6 @@ def main(url: str | None, file: Path | None, output: Path, whisper_model: str, l
                 logger.info("Downloading audio...")
                 audio_path = youtube.download_audio(url, temp_path)
             else:
-                # At this point, file must be a Path since we've validated the inputs
                 assert file is not None
                 logger.info("Processing local video...")
                 audio_path = temp_path / file.name
@@ -81,7 +80,12 @@ def main(url: str | None, file: Path | None, output: Path, whisper_model: str, l
                 model_name=whisper_model,
             )
             
-            # Only show transcript if flag is enabled
+            # Save transcript to output directory
+            transcript_output_path = output / f"{audio_path.stem}_transcript.txt"
+            shutil.copy2(transcript_path, transcript_output_path)
+            logger.info(f"Transcript saved to: {transcript_output_path}")
+            
+            # Show transcript if requested
             if show_transcript:
                 with open(transcript_path, "r", encoding="utf-8") as f:
                     transcript = f.read()
@@ -97,11 +101,11 @@ def main(url: str | None, file: Path | None, output: Path, whisper_model: str, l
             )
             
             # Write summary to output directory
-            output_path = output / f"{audio_path.stem}_summary.txt"
-            with open(output_path, "w", encoding="utf-8") as f:
+            summary_output_path = output / f"{audio_path.stem}_summary.txt"
+            with open(summary_output_path, "w", encoding="utf-8") as f:
                 f.write(summary)
                 
-            logger.info(f"\nSummary saved to: {output_path}")
+            logger.info(f"Summary saved to: {summary_output_path}")
             
         return 0
 
