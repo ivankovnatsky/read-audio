@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class AnthropicProvider(AIProvider):
     def __init__(self, model: str = DEFAULT_ANTRHOPIC_MODEL):
-        self.client = Anthropic()
+        self.client = Anthropic()  # type: ignore
         self.model = model
 
     def summarize(self, text: str) -> str:
@@ -20,11 +20,12 @@ class AnthropicProvider(AIProvider):
             response = self.client.messages.create(
                 model=self.model,
                 max_tokens=1024,
+                system=DEFAULT_SUMMARY_PROMPT,
                 messages=[
                     {
                         "role": "user",
-                        "content": f"{DEFAULT_SUMMARY_PROMPT}\n\n---------------\n\n{text}",
-                    }
+                        "content": text,
+                    },
                 ],
             )
 

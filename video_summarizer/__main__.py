@@ -69,6 +69,11 @@ from .providers import get_provider
     is_flag=True,
     help="Show transcript in output",
 )
+@click.option(
+    "--show-summary",
+    is_flag=True,
+    help="Show summary in output",
+)
 def main(
     url: Optional[str],
     file: Optional[Path],
@@ -79,6 +84,7 @@ def main(
     model: str,
     language: str,
     show_transcript: bool,
+    show_summary: bool,
 ) -> None:
     """Generate summaries of video content"""
 
@@ -125,9 +131,7 @@ def main(
 
             if show_transcript:
                 logger.info("\nTranscript:")
-                logger.info("-" * 80)
                 logger.info(transcript_text)
-                logger.info("-" * 80)
 
         summary = ai_provider.summarize(transcript_text)
 
@@ -135,6 +139,10 @@ def main(
         output_file = output / f"{transcript_path.stem}_summary.txt"
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(summary)
+
+            if show_summary:
+                logger.info("\nSummary:")
+                logger.info(summary)
 
         logger.info(f"Summary written to {output_file}")
 

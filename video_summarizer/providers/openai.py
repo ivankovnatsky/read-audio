@@ -21,8 +21,17 @@ class OpenAIProvider(AIProvider):
                 model=self.model,
                 messages=[
                     {
+                        "role": "system",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": DEFAULT_SUMMARY_PROMPT,
+                            }
+                        ],
+                    },
+                    {
                         "role": "user",
-                        "content": f"{DEFAULT_SUMMARY_PROMPT}\n\n---------------\n\n{text}",
+                        "content": text,
                     },
                 ],
                 temperature=0.7,
