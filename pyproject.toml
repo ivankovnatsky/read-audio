@@ -13,6 +13,8 @@ openai-whisper = "20240930"
 requests = "^2.31.0"
 mlx-whisper = {version = "^0.4.1", platform = "darwin", optional = true}
 click = "^8.1.7"
+openai = "^1.59.7"
+anthropic = "^0.43.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.9"

@@ -2,34 +2,45 @@ import sys
 from pathlib import Path
 import tempfile
 import shutil
+from typing import Optional
 import click
 
 from video_summarizer.download import youtube
 from video_summarizer.transcribe import whisper
-from video_summarizer.summarize import llama
-from video_summarizer.config import (
+from video_summarizer.constants import (
     DEFAULT_WHISPER_MODEL,
     DEFAULT_LLAMA_MODEL,
     DEFAULT_LANGUAGE,
+    MODEL_MAPPING,
 )
 from video_summarizer.logger import logger
+from .providers import get_provider
 
 
 @click.command()
 @click.option(
     "--url",
-    help="YouTube video URL to summarize",
+    help="URL of the video to summarize",
+    type=str,
+    default=None,
 )
 @click.option(
     "--file",
     type=click.Path(exists=True, path_type=Path),
-    help="Local video file to summarize",
+    help="Path to local video file",
+    default=None,
 )
 @click.option(
-    "-o", "--output",
+    "--transcript",
+    type=click.Path(exists=True, path_type=Path),
+    help="Path to existing transcript file",
+    default=None,
+)
+@click.option(
+    "--output",
     type=click.Path(path_type=Path),
     default=Path("/tmp"),
-    help="Output directory for generated files",
+    help="Output directory for summary files",
 )
 @click.option(
     "--whisper-model",
@@ -37,81 +48,95 @@ from video_summarizer.logger import logger
     help=f"Whisper model to use (default: {DEFAULT_WHISPER_MODEL})",
 )
 @click.option(
-    "--llama-model",
+    "--provider",
+    type=click.Choice(["openai", "anthropic", "ollama"]),
+    default="ollama",
+    help="AI provider to use for summarization",
+)
+# FIXME: Handle provider/model mapping correctly.
+@click.option(
+    "--model",
+    help="Model to use for summarization",
     default=DEFAULT_LLAMA_MODEL,
-    help=f"LLaMA model to use (default: {DEFAULT_LLAMA_MODEL})",
 )
 @click.option(
     "--language",
     default=DEFAULT_LANGUAGE,
-    help=f"Video language (default: {DEFAULT_LANGUAGE})",
+    help="Language of the video",
 )
 @click.option(
     "--show-transcript",
     is_flag=True,
-    help="Display the transcript before summarization",
+    help="Show transcript in output",
 )
-def main(url: str | None, file: Path | None, output: Path, whisper_model: str, llama_model: str, language: str, show_transcript: bool) -> int:
-    """Generate video summaries using Whisper and LLaMA."""
-    if not url and not file:
-        raise click.UsageError("Either --url or --file must be provided")
-    if url and file:
-        raise click.UsageError("Cannot use both --url and --file")
+def main(
+    url: Optional[str],
+    file: Optional[Path],
+    transcript: Optional[Path],
+    output: Path,
+    whisper_model: str,
+    provider: str,
+    model: str,
+    language: str,
+    show_transcript: bool,
+) -> None:
+    """Generate summaries of video content"""
 
-    try:
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_path = Path(temp_dir)
-            
-            # Handle input source
+    # Validate input parameters
+    if sum(bool(x) for x in [url, file, transcript]) != 1:
+        raise click.UsageError(
+            "Exactly one of --url, --file, or --transcript must be provided"
+        )
+
+    # Create temporary directory for processing
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_path = Path(temp_dir)
+        audio_path: Optional[Path] = None
+
+        # Handle input sources
+        if transcript:
+            transcript_path = transcript
+        else:
             if url:
-                logger.info("Downloading audio...")
                 audio_path = youtube.download_audio(url, temp_path)
-            else:
-                assert file is not None
-                logger.info("Processing local video...")
+            elif file:
                 audio_path = temp_path / file.name
-                shutil.copy2(file, audio_path)
-            
-            logger.info("Transcribing audio...")
+                shutil.copy2(str(file), str(audio_path))
+
+            if not audio_path:
+                raise click.UsageError("Failed to get audio file")
+
             transcript_path = whisper.transcribe(
-                audio_path,
-                temp_path,
+                audio_path=audio_path,
+                output_dir=temp_path,
                 language=language,
                 model_name=whisper_model,
             )
-            
+
             # Save transcript to output directory
             transcript_output_path = output / f"{audio_path.stem}_transcript.txt"
             shutil.copy2(transcript_path, transcript_output_path)
             logger.info(f"Transcript saved to: {transcript_output_path}")
-            
-            # Show transcript if requested
+
+        # Generate summary
+        ai_provider = get_provider(provider, MODEL_MAPPING.get(provider, model))
+        with open(transcript_path, "r", encoding="utf-8") as f:
+            transcript_text = f.read()
+
             if show_transcript:
-                with open(transcript_path, "r", encoding="utf-8") as f:
-                    transcript = f.read()
                 logger.info("\nTranscript:")
                 logger.info("-" * 80)
-                logger.info(transcript)
+                logger.info(transcript_text)
                 logger.info("-" * 80)
-            
-            logger.info("\nGenerating summary...")
-            summary = llama.summarize(
-                transcript_path,
-                model_name=llama_model,
-            )
-            
-            # Write summary to output directory
-            summary_output_path = output / f"{audio_path.stem}_summary.txt"
-            with open(summary_output_path, "w", encoding="utf-8") as f:
-                f.write(summary)
-                
-            logger.info(f"Summary saved to: {summary_output_path}")
-            
-        return 0
 
-    except Exception as e:
-        logger.error(f"Error: {str(e)}")
-        return 1
+        summary = ai_provider.summarize(transcript_text)
+
+        # Prepare output
+        output_file = output / f"{transcript_path.stem}_summary.txt"
+        with open(output_file, "w", encoding="utf-8") as f:
+            f.write(summary)
+
+        logger.info(f"Summary written to {output_file}")
 
 
 if __name__ == "__main__":

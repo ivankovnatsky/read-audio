@@ -19,7 +19,7 @@ install-macos:
 	$(POETRY) install -E macos
 
 regenerate-lock:
-	$(POETRY) lock --no-update
+	$(POETRY) lock --regenerate
 
 # Clean build files
 clean:

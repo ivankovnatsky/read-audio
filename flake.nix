@@ -49,6 +49,10 @@
             export LDFLAGS="-L${pkgs.llvmPackages_14.llvm}/lib"
             export CPPFLAGS="-I${pkgs.llvmPackages_14.llvm}/include"
 
+            # Add API keys
+            export OPENAI_API_KEY=$(pass openai-api-key)
+            export ANTHROPIC_API_KEY=$(pass anthropic-api-key)
+
             # Start Ollama service if not running
             if ! pgrep -f "${pkgs.ollama}/bin/ollama serve" > /dev/null 2>&1; then
               ${pkgs.daemon}/bin/daemon \

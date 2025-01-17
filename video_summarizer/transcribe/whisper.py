@@ -3,6 +3,10 @@ import platform
 
 import whisper
 from video_summarizer.logger import logger
+from video_summarizer.constants import (
+    DEFAULT_WHISPER_MODEL,
+    DEFAULT_MLX_WHISPER_MODEL_REPO,
+)
 
 
 def _is_apple_silicon() -> bool:
@@ -20,13 +24,13 @@ def _transcribe_with_mlx(
     output_path = output_dir / f"{audio_path.stem}.txt"
 
     try:
-        import mlx_whisper
+        import mlx_whisper  # type: ignore
 
         logger.info("Using MLX-Whisper for transcription...")
 
         result = mlx_whisper.transcribe(
             str(audio_path),
-            path_or_hf_repo="mlx-community/whisper-turbo",
+            path_or_hf_repo=DEFAULT_MLX_WHISPER_MODEL_REPO,
             language=language,
         )
 
@@ -45,7 +49,7 @@ def _transcribe_with_whisper(
     audio_path: Path,
     output_dir: Path,
     language: str | None = None,
-    model_name: str = "base",
+    model_name: str = DEFAULT_WHISPER_MODEL,
 ) -> Path:
     """
     Transcribe audio using OpenAI's Whisper.
@@ -75,7 +79,7 @@ def transcribe(
     audio_path: Path,
     output_dir: Path,
     language: str | None = None,  # Changed default to None for auto-detection
-    model_name: str = "base",
+    model_name: str = DEFAULT_WHISPER_MODEL,
 ) -> Path:
     """
     Transcribe audio using the most appropriate method.
