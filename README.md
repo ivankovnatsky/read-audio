@@ -103,5 +103,3 @@ direnv allow
 ```
 
 ## TODO
-
-- [ ] Research if we can use Cloud models for faster summarization
