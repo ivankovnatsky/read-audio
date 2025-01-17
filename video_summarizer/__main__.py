@@ -104,14 +104,17 @@ def main(
             transcript_path = transcript
         else:
             if url:
+                logger.info("Downloading audio...")
                 audio_path = youtube.download_audio(url, temp_path)
             elif file:
+                logger.info("Processing local video...")
                 audio_path = temp_path / file.name
                 shutil.copy2(str(file), str(audio_path))
 
             if not audio_path:
                 raise click.UsageError("Failed to get audio file")
 
+            logger.info("Transcribing audio...")
             transcript_path = whisper.transcribe(
                 audio_path=audio_path,
                 output_dir=temp_path,
@@ -124,13 +127,28 @@ def main(
             shutil.copy2(transcript_path, transcript_output_path)
             logger.info(f"Transcript saved to: {transcript_output_path}")
 
+            # Validate and get correct model for provider
+            if model != MODEL_MAPPING[provider]:
+                logger.warning(
+                    f"""Model '{model}' is not supported by {provider}.
+                    Using default model '{MODEL_MAPPING[provider]}' instead.
+                """
+                )
+                model = MODEL_MAPPING[provider]
+            else:
+                raise click.UsageError(f"Unknown provider: {provider}")
+
         # Generate summary
         ai_provider = get_provider(provider, MODEL_MAPPING.get(provider, model))
         with open(transcript_path, "r", encoding="utf-8") as f:
             transcript_text = f.read()
 
             if show_transcript:
-                logger.info("\nTranscript:")
+                logger.info(
+                    """
+                Transcript:
+                """
+                )
                 logger.info(transcript_text)
 
         summary = ai_provider.summarize(transcript_text)
@@ -141,7 +159,10 @@ def main(
             f.write(summary)
 
             if show_summary:
-                logger.info("\nSummary:")
+                logger.info(
+                    """Summary:
+                """
+                )
                 logger.info(summary)
 
         logger.info(f"Summary written to {output_file}")

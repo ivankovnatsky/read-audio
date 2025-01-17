@@ -42,7 +42,11 @@ class OllamaProvider(AIProvider):
 
         request_body = {
             "model": self.model,
-            "prompt": f"{DEFAULT_SUMMARY_PROMPT}\n\n---------------\n\n{text}",
+            "prompt": f"""
+                {DEFAULT_SUMMARY_PROMPT}
+                ---------------
+                {text}
+            """,
             "stream": False,
         }
 
