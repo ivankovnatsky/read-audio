@@ -9,6 +9,7 @@ DEFAULT_SUMMARY_PROMPT = (
 
 # Model configurations
 DEFAULT_WHISPER_MODEL = "base"
+DEFAULT_WHISPER_CLOUD_MODEL = "whisper-1"
 DEFAULT_MLX_WHISPER_MODEL_REPO = "mlx-community/whisper-turbo"
 DEFAULT_LANGUAGE = "en"
 

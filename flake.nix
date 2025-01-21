@@ -24,7 +24,16 @@
             propagatedBuildInputs = with pkgs; [
               ffmpeg
               ollama
+              python3Packages.pydub
             ];
+
+            # Override dependencies that don't build properly
+            overrides = poetry2nix.overrides.withDefaults (final: prev: {
+              pydub = prev.pydub.overridePythonAttrs (old: {
+                buildInputs = (old.buildInputs or [ ]) ++ [ final.setuptools ];
+                propagatedBuildInputs = (old.propagatedBuildInputs or [ ]) ++ [ pkgs.ffmpeg ];
+              });
+            });
           };
           default = self.packages.${system}.video-summarizer;
         };
@@ -41,6 +50,7 @@
             gcc
             daemon
             yt-dlp
+            python3Packages.pydub
           ];
 
           # Set environment variables for llvmlite and ensure Ollama model is available

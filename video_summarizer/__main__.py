@@ -74,6 +74,11 @@ from .providers import get_provider
     is_flag=True,
     help="Show summary in output",
 )
+@click.option(
+    "--use-cloud-whisper",
+    is_flag=True,
+    help="Use OpenAI's Whisper cloud API for transcription",
+)
 def main(
     url: Optional[str],
     file: Optional[Path],
@@ -85,6 +90,7 @@ def main(
     language: str,
     show_transcript: bool,
     show_summary: bool,
+    use_cloud_whisper: bool,
 ) -> None:
     """Generate summaries of video content"""
 
@@ -105,7 +111,11 @@ def main(
         else:
             if url:
                 logger.info("Downloading audio...")
-                audio_path = youtube.download_audio(url, temp_path)
+                audio_path = youtube.download_audio(
+                    url, 
+                    temp_path, 
+                    use_cloud=use_cloud_whisper
+                )
             elif file:
                 logger.info("Processing local video...")
                 audio_path = temp_path / file.name
@@ -120,6 +130,7 @@ def main(
                 output_dir=temp_path,
                 language=language,
                 model_name=whisper_model,
+                use_cloud=use_cloud_whisper,
             )
 
             # Save transcript to output directory
