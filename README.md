@@ -77,21 +77,25 @@ Usage: read-audio [OPTIONS]
 
 Options:
   --mode [summary|condense]       Processing mode: summary (200-250 words) or
-                                 condense (configurable length)
-  --condense-percentage INTEGER   Percentage of original length for condensed
-                                 output (1-100%)
-  --url TEXT                     URL of the video to summarize
-  --file PATH                    Path to local video file
-  --transcript PATH              Path to existing transcript file
-  --output PATH                  Output directory for processed files
-  --whisper-model TEXT           Whisper model to use (default: base)
+                                  condense (5% length)
+  --url TEXT                      URL of the video to summarize
+  --file PATH                     Path to local video file
+  --transcript PATH               Path to existing transcript file
+  --output PATH                   Output directory for processed files
+  --whisper-model TEXT            Whisper model to use (default: base)
   --provider [openai|anthropic|ollama]
-                                AI provider to use for processing
-  --model TEXT                   Model to use for processing
-  --language TEXT                Language of the video
-  --show-transcript              Show transcript in output
-  --show-processed-text          Show processed text in output
-  --help                         Show this message and exit
+                                  AI provider to use for summarization
+  --model TEXT                    Model to use for summarization
+  --language TEXT                 Language of the video
+  --show-transcript               Show transcript in output
+  --show-processed-text           Show processed text (summary or condensed)
+                                  in output
+  --use-cloud-whisper             Use OpenAI's Whisper cloud API for
+                                  transcription
+  --condense-percentage PERCENTAGE_TYPE
+                                  Percentage of original length for condensed
+                                  output (1-100%)
+  --help                          Show this message and exit.
 ```
 
 ## Development

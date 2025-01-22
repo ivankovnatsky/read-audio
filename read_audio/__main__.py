@@ -29,7 +29,7 @@ from .providers import get_provider
     "--mode",
     type=click.Choice(["summary", "condense"]),
     default="summary",
-    help="Processing mode: summary (200-250 words) or condense (5% length)",
+    help="Processing mode: summary (200-250 words) or condense (configurable length)",
 )
 @click.option(
     "--url",
@@ -124,7 +124,7 @@ def main(
     # Get the correct model for the provider
     if model == DEFAULT_LLAMA_MODEL:  # If using the default model
         model = MODEL_MAPPING[provider]  # Use the provider's default model
-    
+
     # Create temporary directory for processing
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
@@ -177,10 +177,12 @@ def main(
             formatted_prompt = DEFAULT_CONDENSE_PROMPT.format(
                 percentage=condense_percentage,
                 input_length=input_length,
-                target_length=target_length
+                target_length=target_length,
             )
             logger.info(f"Using condense prompt: {formatted_prompt}")
-            result = ai_provider.process_text(transcript_text, mode, prompt=formatted_prompt)
+            result = ai_provider.process_text(
+                transcript_text, mode, prompt=formatted_prompt
+            )
         else:
             result = ai_provider.process_text(transcript_text, mode)
 
