@@ -8,13 +8,16 @@ A Python utility to summarize videos using various AI providers (local and cloud
   - YouTube URLs
   - Local video files
   - Existing transcript files
+- Two processing modes:
+  - Summary: Generate a 200-250 word summary
+  - Condense: Create a shorter version with configurable length (1-100%)
 - Flexible AI provider options:
   - Local: Ollama
   - Cloud: OpenAI, Anthropic
 - Efficient transcription using Whisper
   - Optimized for Apple Silicon with mlx-whisper
 - Multi-language support
-- Transcript and summary or condense file output
+- Transcript and processed text output
 
 ## Requirements
 
@@ -52,16 +55,16 @@ poetry install -E macos
 
 ## Usage
 
-Run basic example:
+Run basic summary example:
 
 ```console
 make run-example
 ```
 
-Run example with Ukrainian language:
+Run Ukrainian language example with condensing:
 
 ```console
-make run-example-uk
+make run-example-uk-condense
 ```
 
 ## Options
@@ -70,20 +73,25 @@ make run-example-uk
 poetry run read-audio --help
 Usage: read-audio [OPTIONS]
 
-  Generate summary/condensation of video content
+  Generate summaries or condensed versions of video content
 
 Options:
-  --url TEXT                      URL of the video to summarize
-  --file PATH                     Path to local video file
-  --transcript PATH               Path to existing transcript file
-  --output PATH                   Output directory for processed files
-  --whisper-model TEXT            Whisper model to use (default: base)
+  --mode [summary|condense]       Processing mode: summary (200-250 words) or
+                                 condense (configurable length)
+  --condense-percentage INTEGER   Percentage of original length for condensed
+                                 output (1-100%)
+  --url TEXT                     URL of the video to summarize
+  --file PATH                    Path to local video file
+  --transcript PATH              Path to existing transcript file
+  --output PATH                  Output directory for processed files
+  --whisper-model TEXT           Whisper model to use (default: base)
   --provider [openai|anthropic|ollama]
-                                  AI provider to use for summarization
-  --model TEXT                    Model to use for summarization
-  --language TEXT                 Language of the video
-  --show-transcript               Show transcript in output
-  --help                          Show this message and exit.
+                                AI provider to use for processing
+  --model TEXT                   Model to use for processing
+  --language TEXT                Language of the video
+  --show-transcript              Show transcript in output
+  --show-processed-text          Show processed text in output
+  --help                         Show this message and exit
 ```
 
 ## Development

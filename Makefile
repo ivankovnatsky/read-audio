@@ -90,5 +90,22 @@ run-example-with-transcript:
 		--show-transcript \
 		--url "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
+# Add new example targets for condense mode
+run-example-condense:
+	$(POETRY) run $(BINARY_NAME) \
+		--mode condense \
+		--condense-percentage 30 \
+		--url "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+
+run-example-uk-condense:
+	$(POETRY) run $(BINARY_NAME) \
+		--mode condense \
+		--condense-percentage 80 \
+		--whisper-model large \
+		--language uk \
+		--provider openai \
+		--show-processed-text \
+		--url "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+
 # Check all (format, lint)
 check: fmt-check lint
