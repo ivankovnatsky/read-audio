@@ -16,7 +16,7 @@
       in
       {
         packages = {
-          video-summarizer = mkPoetryApplication {
+          read-audio = mkPoetryApplication {
             projectDir = ./.;
             preferWheels = true;
 
@@ -35,7 +35,7 @@
               });
             });
           };
-          default = self.packages.${system}.video-summarizer;
+          default = self.packages.${system}.read-audio;
         };
 
         devShells.default = pkgs.mkShell {

@@ -2,7 +2,7 @@
 
 # Python parameters
 POETRY=poetry
-BINARY_NAME=video-summarizer
+BINARY_NAME=read-audio
 
 # Default model parameters (should match config.py)
 DEFAULT_LLAMA_MODEL=llama3.1:8b

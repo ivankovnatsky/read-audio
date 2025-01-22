@@ -1,4 +1,4 @@
-# video-summarizer
+# read-audio
 
 A Python utility to summarize videos using various AI providers (local and cloud-based).
 
@@ -14,7 +14,7 @@ A Python utility to summarize videos using various AI providers (local and cloud
 - Efficient transcription using Whisper
   - Optimized for Apple Silicon with mlx-whisper
 - Multi-language support
-- Transcript and summary file output
+- Transcript and summary or condense file output
 
 ## Requirements
 
@@ -67,16 +67,16 @@ make run-example-uk
 ## Options
 
 ```console
-poetry run video-summarizer --help
-Usage: video-summarizer [OPTIONS]
+poetry run read-audio --help
+Usage: read-audio [OPTIONS]
 
-  Generate summaries of video content
+  Generate summary/condensation of video content
 
 Options:
   --url TEXT                      URL of the video to summarize
   --file PATH                     Path to local video file
   --transcript PATH               Path to existing transcript file
-  --output PATH                   Output directory for summary files
+  --output PATH                   Output directory for processed files
   --whisper-model TEXT            Whisper model to use (default: base)
   --provider [openai|anthropic|ollama]
                                   AI provider to use for summarization
@@ -103,7 +103,7 @@ make lint
 ## Project Configuration
 
 ```console
-gh repo create video-summarizer --public
+gh repo create read-audio --public
 direnv allow
 ```
 

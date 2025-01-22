@@ -1,4 +1,4 @@
-"""Default configuration for video-summarizer."""
+"""Default configuration for read-audio."""
 
 DEFAULT_SUMMARY_PROMPT = (
     "Below is a audio transcript. "
@@ -6,6 +6,15 @@ DEFAULT_SUMMARY_PROMPT = (
     "To conclude list the key points and issues discussed.  "
     "Use the same language as the source transcript. "
 )
+
+DEFAULT_CONDENSE_PROMPT = (
+    "Below is a audio transcript. "
+    "Your task is to condense this text while maintaining EXACTLY {percentage}% of the original length. "
+    "The input text is {input_length} characters long, so your response should be {target_length} characters. "
+    "Use the same language as the source transcript. "
+)
+
+DEFAULT_CONDENSE_PERCENTAGE = 5
 
 # Model configurations
 DEFAULT_WHISPER_MODEL = "base"

@@ -4,7 +4,7 @@ class OllamaError(Exception):
     pass
 
 
-class SummaryError(Exception):
-    """Base exception for summary-related errors."""
+class ProcessedTextError(Exception):
+    """Base exception for processed text errors."""
 
     pass

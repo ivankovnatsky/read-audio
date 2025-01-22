@@ -2,7 +2,7 @@ from .protocol import AIProvider
 from .openai import OpenAIProvider
 from .anthropic import AnthropicProvider
 from .ollama import OllamaProvider
-from video_summarizer.constants import (
+from read_audio.constants import (
     DEFAULT_LLAMA_MODEL,
     DEFAULT_OPENAI_MODEL,
     DEFAULT_ANTRHOPIC_MODEL,
